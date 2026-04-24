@@ -1,0 +1,25 @@
+description: "Go programming language CI image with build tools and development utilities."
+
+tags:
+  - name: "1.26"
+    versions:
+      golang: 1.26.1
+  - name: "1.25"
+    versions:
+      golang: 1.25.6
+
+versions:
+  zig: 0.14.1
+
+report:
+  icon: "devicon-go-original-wordmark"
+
+variants:
+  - name: node
+    tag_suffix: -node
+    versions:
+      nodejs: "24"
+
+latest_alias:
+  tag: latest
+  on_missing: warning

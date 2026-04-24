@@ -1,0 +1,13 @@
+registry:
+  address: 'docker.io/timoreymann'
+
+platforms:
+  - linux/amd64
+  - linux/arm64
+
+cache:
+  type: registry
+  ref:  'ghcr.io/timo-reymann/container-base-images-cache'
+
+buildkit:
+  address: tcp://127.0.0.1:8372
