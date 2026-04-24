@@ -8,6 +8,3 @@ platforms:
 cache:
   type: registry
   ref:  'ghcr.io/timo-reymann/container-base-images-cache'
-
-buildkit:
-  address: tcp://127.0.0.1:8372
