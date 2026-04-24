@@ -141,6 +141,8 @@ jobs:
           path: dist/
       - name: Prepare temp directory
         run: mkdir -p "$RUNNER_TEMP/ch"
+      - name: Login to registry
+        run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch login -u "${{ github.actor }}" --password-stdin ghcr.io
       - name: Finalize manifest
@@ -168,6 +170,8 @@ jobs:
         run: docker network create ch-net
       - name: Start Docker-in-Docker
         run: docker run -d --name dind --privileged --network ch-net -e DOCKER_TLS_CERTDIR="" docker:dind
+      - name: Login to registry
+        run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e DOCKER_HOST=tcp://dind:2375 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e DOCKER_HOST=tcp://dind:2375 $CH_IMAGE ch login -u "${{ github.actor }}" --password-stdin ghcr.io
       - name: Wait for Docker socket
@@ -198,6 +202,16 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: generated
+          path: dist/
+      - name: Download ci-go-amd64 SBOM
+        uses: actions/download-artifact@v7
+        with:
+          name: ci-go-amd64-sbom
+          path: dist/
+      - name: Download ci-go-arm64 SBOM
+        uses: actions/download-artifact@v7
+        with:
+          name: ci-go-arm64-sbom
           path: dist/
       - run: mkdir -p "$RUNNER_TEMP/ch"
       - run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch report
