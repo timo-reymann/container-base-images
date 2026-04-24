@@ -38,7 +38,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: generated
-          path: /Users/phpe/workspace/container-base-images/dist/
+          path: dist/
           retention-days: 7
 
   # === CI-GO ===
@@ -54,7 +54,7 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: generated
-          path: /Users/phpe/workspace/container-base-images/dist/
+          path: dist/
       - run: mkdir -p "$RUNNER_TEMP/ch"
       - run: docker network create ch-net
       - run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.28.1 --addr tcp://0.0.0.0:8372
@@ -66,7 +66,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: ci-go-amd64-sbom
-          path: /Users/phpe/workspace/container-base-images/dist/*/*/*/cyclonedx.json
+          path: dist/*/*/*/cyclonedx.json
           retention-days: 30
 
   build-ci-go-arm64:
@@ -80,7 +80,7 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: generated
-          path: /Users/phpe/workspace/container-base-images/dist/
+          path: dist/
       - run: mkdir -p "$RUNNER_TEMP/ch"
       - run: docker network create ch-net
       - run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.28.1 --addr tcp://0.0.0.0:8372
@@ -92,7 +92,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: ci-go-arm64-sbom
-          path: /Users/phpe/workspace/container-base-images/dist/*/*/*/cyclonedx.json
+          path: dist/*/*/*/cyclonedx.json
           retention-days: 30
 
 
@@ -108,7 +108,7 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: generated
-          path: /Users/phpe/workspace/container-base-images/dist/
+          path: dist/
       - run: mkdir -p "$RUNNER_TEMP/ch"
       - run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch  login -u "${{ github.actor }}" --password-stdin ghcr.io
       - run: docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch  finalize ci-go --build-id "$SNAPSHOT_ID"
@@ -124,7 +124,7 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: generated
-          path: /Users/phpe/workspace/container-base-images/dist/
+          path: dist/
       - run: mkdir -p "$RUNNER_TEMP/ch"
       - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
       - run: docker network create ch-net
@@ -138,7 +138,7 @@ jobs:
         if: success() || failure()
         with:
           check_name: "Container Structure Tests - ci-go"
-          report_paths: '/Users/phpe/workspace/container-base-images/dist/**/*-cst-report.xml'
+          report_paths: 'dist/**/*-cst-report.xml'
           require_tests: 'false'
           detailed_summary: 'true'
           comment: 'true'
@@ -156,13 +156,13 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: generated
-          path: /Users/phpe/workspace/container-base-images/dist/
+          path: dist/
       - run: mkdir -p "$RUNNER_TEMP/ch"
       - run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch  report
       - run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch  report --json
       - run: mkdir -p public
-      - run: cp /Users/phpe/workspace/container-base-images/dist/report.html public/index.html
-      - run: cp /Users/phpe/workspace/container-base-images/dist/report.json public/report.json
+      - run: cp dist/report.html public/index.html
+      - run: cp dist/report.json public/report.json
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public/
