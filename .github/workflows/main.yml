@@ -21,7 +21,7 @@ permissions:
 
 env:
   SNAPSHOT_ID: "${{ github.event.pull_request.number }}"
-  CH_IMAGE: "ghcr.io/timo-reymann/containerhive:6862464"
+  CH_IMAGE: timoreymann/containerhive:v0.11.0
 
 jobs:
   # === GENERATE ===
@@ -127,6 +127,7 @@ jobs:
   manifest-ci-go:
     runs-on: ubuntu-latest
     needs:
+      - test-ci-go
       - build-ci-go-amd64
       - build-ci-go-arm64
     steps:
@@ -151,7 +152,8 @@ jobs:
   test-ci-go:
     runs-on: ubuntu-latest
     needs:
-      - manifest-ci-go
+      - build-ci-go-amd64
+      - build-ci-go-arm64
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -196,10 +198,12 @@ jobs:
       - build-ci-go-arm64
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
         with:
           lfs: true
-      - uses: actions/download-artifact@v7
+      - name: Download generated files
+        uses: actions/download-artifact@v7
         with:
           name: generated
           path: dist/
@@ -213,14 +217,22 @@ jobs:
         with:
           name: ci-go-arm64-sbom
           path: dist/
-      - run: mkdir -p "$RUNNER_TEMP/ch"
-      - run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch report
-      - run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch report --json
-      - run: mkdir -p public
-      - run: cp dist/report.html public/index.html
-      - run: cp dist/report.json public/report.json
-      - uses: actions/upload-pages-artifact@v3
+      - name: Prepare temp directory
+        run: mkdir -p "$RUNNER_TEMP/ch"
+      - name: Generate HTML report
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch report
+      - name: Generate JSON report
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch report --json
+      - name: Prepare Pages content
+        run: mkdir -p public
+      - name: Copy HTML report
+        run: cp dist/report.html public/index.html
+      - name: Copy JSON report
+        run: cp dist/report.json public/report.json
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public/
-      - uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
