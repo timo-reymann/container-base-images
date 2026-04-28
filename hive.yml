@@ -8,3 +8,7 @@ platforms:
 cache:
   type: registry
   ref:  'ghcr.io/timo-reymann/container-base-images-cache'
+
+labels:
+  custom:
+    maintainer: Timo Reymann <github@timo-reymann.de>
