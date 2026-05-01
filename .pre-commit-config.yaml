@@ -1,0 +1,12 @@
+repos:
+  - repo: https://github.com/ContainerHive/pre-commit
+    rev: v0.13.0
+    hooks:
+      - id: run
+        args:
+          - template
+          - ci
+          - --provider
+          - github
+          - --output
+          - .github/workflows/main.yml

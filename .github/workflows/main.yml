@@ -21,7 +21,7 @@ permissions:
 
 env:
   SNAPSHOT_ID: "${{ github.event.pull_request.number }}"
-  CH_IMAGE: timoreymann/containerhive:v0.12.2
+  CH_IMAGE: timoreymann/containerhive:v0.13.0
 
 jobs:
   # === GENERATE ===
