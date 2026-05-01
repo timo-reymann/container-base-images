@@ -3,4 +3,7 @@ USER 0
 RUN mkdir -p /usr/local/zig-x86_64-linux-{{ .Versions.zig }} \
     && curl -L "https://ziglang.org/download/{{ .Versions.zig }}/zig-x86_64-linux-{{ .Versions.zig }}.tar.xz" | tar -xJ -C /usr/local \
     && ln -s "/usr/local/zig-x86_64-linux-{{ .Versions.zig }}/zig" /usr/local/bin/zig
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+      zstd
 USER 1000
