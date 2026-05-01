@@ -1,6 +1,6 @@
 # Container Base Images
 
-Container base images built with [Hive](https://github.com/timo-reymann/hive).
+Container base images built with [ContainerHive](https://github.com/ContainerHive/ContainerHive).
 
 ## Images
 
