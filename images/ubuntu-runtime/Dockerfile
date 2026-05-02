@@ -27,6 +27,9 @@ RUN chisel cut \
       libc6_libs \
       tzdata_zoneinfo \
       tzdata_copyright
+RUN echo "runtime:x:1000:1000:runtime:/home/runtime:/bin/sh" >> /etc/passwd \
+    && mkdir -p /home/runtime \
+    && chown 1000:1000 /home/runtime
 
 FROM scratch
 COPY --from=chisel /staging /
