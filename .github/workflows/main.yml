@@ -387,7 +387,7 @@ jobs:
       - name: Copy JSON report
         run: cp dist/report.json public/report.json
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: public/
       - name: Deploy to GitHub Pages
