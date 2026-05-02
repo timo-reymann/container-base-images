@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JsonSchemaMappingsProjectConfiguration">
+    <state>
+      <map>
+        <entry key="containerhive-image">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="containerhive-image" />
+              <option name="relativePathToSchema" value="https://schema-nest.timo-reymann.de/api/schema/json-schema/containerhive-image/latest" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="images/**/image.yml" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="containerhive-project">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="containerhive-project" />
+              <option name="relativePathToSchema" value="https://schema-nest.timo-reymann.de/api/schema/json-schema/containerhive-project/latest" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="hive.yml" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+      </map>
+    </state>
+  </component>
+</project>
