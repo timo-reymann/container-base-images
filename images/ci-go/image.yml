@@ -3,7 +3,7 @@ description: "Go programming language CI image with build tools and development 
 tags:
   - name: "1.26"
     versions:
-      golang: 1.26.1
+      golang: 1.26.2
   - name: "1.25"
     versions:
       golang: 1.25.6
