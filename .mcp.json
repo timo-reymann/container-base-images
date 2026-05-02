@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "containerhive": {
+      "type": "stdio",
+      "command": "ch",
+      "args": [
+        "mcp"
+      ],
+      "env": {}
+    }
+  }
+}
