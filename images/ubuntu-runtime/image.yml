@@ -1,0 +1,17 @@
+description: Ubuntu runtime base image with minimal dependencies and no package manager
+tags:
+  - name: "24.04"
+    versions:
+      ubuntu: "24.04"
+  - name: "26.04"
+    versions:
+      ubuntu: "26.04"
+versions:
+  chisel: "v1.4.1"
+
+report:
+  icon: devicon-ubuntu-plain
+
+latest_alias:
+  tag: edge
+  on_missing: warning

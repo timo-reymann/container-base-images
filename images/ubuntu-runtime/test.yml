@@ -1,0 +1,11 @@
+schemaVersion: 2.0.0
+commandTests:
+  - name: "sh-installed"
+    command: "sh"
+    args: ["--help"]
+    exitCode: 0
+fileExistenceTests:
+  - name: 'Certificates'
+    path: '/etc/ssl/certs/ca-certificates.crt'
+    shouldExist: true
+
