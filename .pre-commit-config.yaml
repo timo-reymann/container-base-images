@@ -10,3 +10,18 @@ repos:
           - github
           - --output
           - .github/workflows/main.yml
+  - repo: "https://github.com/python-jsonschema/check-jsonschema"
+    rev: main
+    hooks:
+      - id: check-jsonschema
+        args:
+          - --schemafile
+          - https://schema-nest.timo-reymann.de//api/schema/json-schema/containerhive-project/channel/0.x
+        name: Validate hive project configuration
+        files: hive.yml
+      - id: check-jsonschema
+        args:
+          - --schemafile
+          - https://schema-nest.timo-reymann.de//api/schema/json-schema/containerhive-image/channel/0.x
+        name: Validate hive image configuration
+        files: images/.*/image\.yml
