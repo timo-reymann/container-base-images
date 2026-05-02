@@ -6,11 +6,16 @@ tags:
   - name: "26.04"
     versions:
       ubuntu: "26.04"
+
 versions:
   chisel: "v1.4.1" # renovate: datasource=github-releases depName=canonical/chisel
 
 report:
   icon: devicon-ubuntu-plain
+
+variants:
+  - name: bash
+    tag_suffix: "-bash"
 
 latest_alias:
   tag: edge
