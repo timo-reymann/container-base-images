@@ -21,7 +21,6 @@ RUN chisel cut \
       base-files_release-info \
       busybox_bins \
       busybox_copyright \
-      ca-certificates_bins \
       ca-certificates_copyright \
       ca-certificates_data-with-certs \
       libc6_copyright \
