@@ -6,4 +6,4 @@ RUN mkdir -p /usr/local/zig-x86_64-linux-{{ .Versions.zig }} \
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
       zstd
-USER 1000
+USER circleci
