@@ -7,7 +7,7 @@ tags:
     versions:
       ubuntu: "26.04"
 versions:
-  chisel: "v1.4.1"
+  chisel: "v1.4.1" # renovate: datasource=github-releases depName=canonical/chisel
 
 report:
   icon: devicon-ubuntu-plain
