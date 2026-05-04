@@ -5,5 +5,8 @@ RUN mkdir -p /usr/local/zig-x86_64-linux-{{ .Versions.zig }} \
     && ln -s "/usr/local/zig-x86_64-linux-{{ .Versions.zig }}/zig" /usr/local/bin/zig
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
-      zstd
+      zstd \
+    && apt-get install -y \
+      clang \
+    && rm -rf /var/lib/apt/lists/*
 USER circleci
