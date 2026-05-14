@@ -32,6 +32,7 @@ RUN echo "runtime:x:1000:1000:runtime:/home/runtime:/bin/sh" >> /etc/passwd \
     && chown 1000:1000 /home/runtime
 
 FROM scratch
+ENV HOME="/home/runtime"
 COPY --from=chisel /staging /
 RUN ["/bin/busybox", "--install"]
 USER 1000
