@@ -59,7 +59,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: dist/
@@ -96,7 +96,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: dist/
@@ -136,7 +136,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: dist/
@@ -160,7 +160,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: dist/
@@ -204,7 +204,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: dist/
@@ -241,7 +241,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: dist/
@@ -281,7 +281,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: dist/
@@ -305,7 +305,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: dist/
@@ -350,27 +350,27 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: dist/
       - name: Download ci-go-amd64 SBOM
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ci-go-amd64-sbom
           path: dist/
       - name: Download ci-go-arm64 SBOM
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ci-go-arm64-sbom
           path: dist/
       - name: Download ubuntu-runtime-amd64 SBOM
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ubuntu-runtime-amd64-sbom
           path: dist/
       - name: Download ubuntu-runtime-arm64 SBOM
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ubuntu-runtime-arm64-sbom
           path: dist/
