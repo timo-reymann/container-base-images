@@ -21,7 +21,7 @@ permissions:
 
 env:
   SNAPSHOT_ID: "${{ github.event.pull_request.number }}"
-  CH_IMAGE: containerhive/containerhive:v0.18.1
+  CH_IMAGE: containerhive/containerhive:v0.21.0
 
 jobs:
   # === GENERATE ===
@@ -41,11 +41,21 @@ jobs:
       - name: Generate build files
         run: docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch generate --build-id "$SNAPSHOT_ID"
       - name: Upload generated files
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: generated
           path: dist/
           retention-days: 7
+
+  lint:
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          lfs: true
+      - name: Lint Dockerfiles
+        run: docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch lint --format github-actions
 
   # === CI-GO ===
 
@@ -53,13 +63,14 @@ jobs:
     runs-on: ubuntu-24.04
     needs:
       - generate
+      - lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: generated
           path: dist/
@@ -68,7 +79,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start BuildKit daemon
-        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.28.1 --addr tcp://0.0.0.0:8372
+        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.30.0 --addr tcp://0.0.0.0:8372
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -80,7 +91,7 @@ jobs:
       - name: Generate SBOM
         run: docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch sbom ci-go --platform amd64 --build-id "$SNAPSHOT_ID"
       - name: Upload SBOM
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: ci-go-amd64-sbom
           path: dist/*/*/*/cyclonedx.json
@@ -90,13 +101,14 @@ jobs:
     runs-on: ubuntu-24.04-arm
     needs:
       - generate
+      - lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: generated
           path: dist/
@@ -105,7 +117,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start BuildKit daemon
-        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.28.1 --addr tcp://0.0.0.0:8372
+        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.30.0 --addr tcp://0.0.0.0:8372
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -117,7 +129,7 @@ jobs:
       - name: Generate SBOM
         run: docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch sbom ci-go --platform arm64 --build-id "$SNAPSHOT_ID"
       - name: Upload SBOM
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: ci-go-arm64-sbom
           path: dist/*/*/*/cyclonedx.json
@@ -136,7 +148,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: generated
           path: dist/
@@ -160,7 +172,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: generated
           path: dist/
@@ -198,13 +210,14 @@ jobs:
     runs-on: ubuntu-24.04
     needs:
       - generate
+      - lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: generated
           path: dist/
@@ -213,7 +226,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start BuildKit daemon
-        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.28.1 --addr tcp://0.0.0.0:8372
+        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.30.0 --addr tcp://0.0.0.0:8372
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -225,7 +238,7 @@ jobs:
       - name: Generate SBOM
         run: docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch sbom ubuntu-runtime --platform amd64 --build-id "$SNAPSHOT_ID"
       - name: Upload SBOM
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: ubuntu-runtime-amd64-sbom
           path: dist/*/*/*/cyclonedx.json
@@ -235,13 +248,14 @@ jobs:
     runs-on: ubuntu-24.04-arm
     needs:
       - generate
+      - lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: generated
           path: dist/
@@ -250,7 +264,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start BuildKit daemon
-        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.28.1 --addr tcp://0.0.0.0:8372
+        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.30.0 --addr tcp://0.0.0.0:8372
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -262,7 +276,7 @@ jobs:
       - name: Generate SBOM
         run: docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch sbom ubuntu-runtime --platform arm64 --build-id "$SNAPSHOT_ID"
       - name: Upload SBOM
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: ubuntu-runtime-arm64-sbom
           path: dist/*/*/*/cyclonedx.json
@@ -281,7 +295,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: generated
           path: dist/
@@ -305,7 +319,7 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: generated
           path: dist/
@@ -350,27 +364,27 @@ jobs:
         with:
           lfs: true
       - name: Download generated files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: generated
           path: dist/
       - name: Download ci-go-amd64 SBOM
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: ci-go-amd64-sbom
           path: dist/
       - name: Download ci-go-arm64 SBOM
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: ci-go-arm64-sbom
           path: dist/
       - name: Download ubuntu-runtime-amd64 SBOM
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: ubuntu-runtime-amd64-sbom
           path: dist/
       - name: Download ubuntu-runtime-arm64 SBOM
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: ubuntu-runtime-arm64-sbom
           path: dist/
