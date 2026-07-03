@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/ContainerHive/pre-commit
-    rev: v0.21.8
+    rev: v0.21.10
     hooks:
       - id: run
         args:
