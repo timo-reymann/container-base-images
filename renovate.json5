@@ -2,6 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>timo-reymann/renovate-config",
-    "github>ContainerHive/ContainerHive//renovate/image-versions.json5"
+    "github>ContainerHive/ContainerHive//renovate/image-versions.json5",
+    "local>timo-reymann/renovate-config//presets/ecosystems/github-actions",
+    "local>timo-reymann/renovate-config//presets/groups/github-actions-artifact-io",
+    "local>timo-reymann/renovate-config//presets/groups/github-actions-pages-deploy"
   ]
 }
