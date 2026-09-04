@@ -21,7 +21,7 @@ permissions:
 
 env:
   SNAPSHOT_ID: "${{ github.event.pull_request.number }}"
-  CH_IMAGE: containerhive/containerhive:v1.0.3
+  CH_IMAGE: containerhive/containerhive:v1.5.0
 
 jobs:
   # === GENERATE ===
@@ -401,7 +401,7 @@ jobs:
       - name: Copy JSON report
         run: cp dist/report.json public/report.json
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public/
       - name: Deploy to GitHub Pages
