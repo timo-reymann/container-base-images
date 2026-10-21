@@ -64,7 +64,7 @@ jobs:
   # === CI-GO ===
 
   build-ci-go-amd64:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - generate
       - lint
@@ -102,7 +102,7 @@ jobs:
           retention-days: 30
 
   build-ci-go-arm64:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     needs:
       - generate
       - lint
@@ -211,7 +211,7 @@ jobs:
   # === UBUNTU-RUNTIME ===
 
   build-ubuntu-runtime-amd64:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - generate
       - lint
@@ -249,7 +249,7 @@ jobs:
           retention-days: 30
 
   build-ubuntu-runtime-arm64:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     needs:
       - generate
       - lint
