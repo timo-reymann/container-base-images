@@ -7,6 +7,7 @@ Minimal Ubuntu runtime base image cut with the native [ContainerHive chisel buil
 The image ships a non-root user and a writable home directory:
 
 - `runtime` - uid `1000`, gid `1000`, default login shell `/bin/sh`
+- `@runtime` group with gid `1000`
 - `$HOME` is `/home/runtime`, a root-owned directory with mode `0777`
 
 ## Busybox Applets

@@ -30,4 +30,4 @@ repos:
           - --schemafile
           - https://schema-nest.timo-reymann.de//api/schema/json-schema/containerhive-chisel/latest
         name: Validate hive chisel cut specs
-        files: images/.*/chisel\.yaml
+        files: images/.*/chisel\.yaml(\.gotpl)?$
