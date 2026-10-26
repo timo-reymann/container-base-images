@@ -45,7 +45,7 @@ docker run --rm --entrypoint sh \
         rel_dirs="$rel_dirs /work/$release"
     done
     # shellcheck disable=SC2086
-    python3 /tools/gen-busybox-slices.py /work/applets.txt /work/busybox.yaml $rel_dirs
+    python3 /tools/gen-busybox-slices.py /work /work/applets.txt /work/busybox.yaml $rel_dirs
 '
 
 mv "$WORK/busybox.yaml" "$SLICES_DIR/busybox.yaml"
