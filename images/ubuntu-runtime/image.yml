@@ -1,4 +1,6 @@
 description: Ubuntu runtime base image with minimal dependencies and no package manager
+build: chisel
+
 tags:
   - name: "24.04"
     versions:
@@ -7,8 +9,13 @@ tags:
     versions:
       ubuntu: "26.04"
 
-versions:
-  chisel: "v1.5.1" # renovate: datasource=github-releases depName=canonical/chisel
+chisel:
+  chisel_version: "v1.5.1" # renovate: datasource=github-releases depName=canonical/chisel
+
+config:
+  env:
+    HOME: /home/runtime
+  user: "1000:1000"
 
 report:
   icon: devicon-ubuntu-plain
@@ -16,6 +23,8 @@ report:
 variants:
   - name: bash
     tag_suffix: "-bash"
+    chisel:
+      parent: "__hive_parent__"
 
 latest_alias:
   tag: edge

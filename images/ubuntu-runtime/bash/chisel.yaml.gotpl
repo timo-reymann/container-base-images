@@ -1,0 +1,6 @@
+# ContainerHive chisel cut spec. This is NOT the chisel-releases release
+# manifest format. Cuts bash on top of the same image via the parent merge.
+release: ubuntu-{{ .Versions.ubuntu }}
+slices:
+  - bash_bins
+  - bash_copyright
