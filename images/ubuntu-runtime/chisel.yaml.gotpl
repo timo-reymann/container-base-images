@@ -1,0 +1,16 @@
+# ContainerHive chisel cut spec. This is NOT the chisel-releases release
+# manifest format. Renders one cut spec per tag from the ubuntu version.
+release: ubuntu-{{ .Versions.ubuntu }}
+slices:
+  - base-files_base
+  - base-files_copyright
+  - base-passwd_data
+  - base-files_release-info
+  - busybox_bins
+  - busybox_copyright
+  - ca-certificates_copyright
+  - ca-certificates_data-with-certs
+  - libc6_copyright
+  - libc6_libs
+  - tzdata_zoneinfo
+  - tzdata_copyright

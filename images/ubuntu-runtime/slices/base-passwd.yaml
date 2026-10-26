@@ -1,0 +1,32 @@
+# Base-passwd slice for the ContainerHive chisel build backend. Based on the
+# canonical/chisel-releases definition, with three changes:
+#   - the mutate script appends the non-root runtime user to /etc/passwd and
+#     its runtime group to /etc/group
+#   - /home/runtime is created with mode 0o777, so the runtime user can write
+# The top-level essential is omitted on purpose: the block form differs
+# between release formats (v1 list, v3 map), and the cut spec lists the
+# slices it needs anyway.
+# Regenerate after upstream changes:
+#   https://github.com/canonical/chisel-releases/blob/ubuntu-24.04/slices/base-passwd.yaml
+
+package: base-passwd
+
+slices:
+  data:
+    contents:
+      /etc/group: {text: FIXME, mutable: true}
+      /etc/passwd: {text: FIXME, mutable: true}
+      /usr/share/base-passwd/group.master: {until: mutate}
+      /usr/share/base-passwd/passwd.master: {until: mutate}
+      /home/runtime/: {make: true, mode: 0o777}
+    mutate: |
+      gr = content.read("/usr/share/base-passwd/group.master")
+      runtime_group = "runtime:x:1000:\n"
+      content.write("/etc/group", gr + runtime_group)
+      pw = content.read("/usr/share/base-passwd/passwd.master")
+      runtime = "runtime:x:1000:1000:runtime:/home/runtime:/bin/sh\n"
+      content.write("/etc/passwd", pw + runtime)
+
+  copyright:
+    contents:
+      /usr/share/doc/base-passwd/copyright:
