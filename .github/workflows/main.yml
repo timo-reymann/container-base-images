@@ -64,7 +64,7 @@ jobs:
   # === CI-GO ===
 
   build-ci-go-amd64:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - generate
       - lint
@@ -102,7 +102,7 @@ jobs:
           retention-days: 30
 
   build-ci-go-arm64:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     needs:
       - generate
       - lint
@@ -167,7 +167,7 @@ jobs:
         run: docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch finalize ci-go --build-id "$SNAPSHOT_ID"
 
   test-ci-go-amd64:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - build-ci-go-amd64
     steps:
@@ -207,7 +207,7 @@ jobs:
           updateComment: 'true'
           include_passed: 'true'
   test-ci-go-arm64:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     needs:
       - build-ci-go-arm64
     steps:
@@ -249,7 +249,7 @@ jobs:
   # === UBUNTU-RUNTIME ===
 
   build-ubuntu-runtime-amd64:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - generate
       - lint
@@ -287,7 +287,7 @@ jobs:
           retention-days: 30
 
   build-ubuntu-runtime-arm64:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     needs:
       - generate
       - lint
@@ -352,7 +352,7 @@ jobs:
         run: docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" $CH_IMAGE ch finalize ubuntu-runtime --build-id "$SNAPSHOT_ID"
 
   test-ubuntu-runtime-amd64:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
       - build-ubuntu-runtime-amd64
     steps:
@@ -392,7 +392,7 @@ jobs:
           updateComment: 'true'
           include_passed: 'true'
   test-ubuntu-runtime-arm64:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     needs:
       - build-ubuntu-runtime-arm64
     steps:
