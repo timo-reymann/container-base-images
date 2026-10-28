@@ -25,7 +25,7 @@ permissions:
 
 env:
   SNAPSHOT_ID: "${{ github.event.pull_request.number }}"
-  CH_IMAGE: containerhive/containerhive:v1.21.0
+  CH_IMAGE: ghcr.io/containerhive/containerhive:v1.24.1
 
 jobs:
   # === GENERATE ===
@@ -83,7 +83,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start BuildKit daemon
-        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.34.0 --addr tcp://0.0.0.0:8372
+        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.34.1 --addr tcp://0.0.0.0:8372
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -121,7 +121,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start BuildKit daemon
-        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.34.0 --addr tcp://0.0.0.0:8372
+        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.34.1 --addr tcp://0.0.0.0:8372
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -185,7 +185,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start Docker-in-Docker
-        run: docker run -d --name dind --privileged --network ch-net -e DOCKER_TLS_CERTDIR="" docker:dind
+        run: docker run -d --name dind --privileged --network ch-net -e DOCKER_TLS_CERTDIR="" ghcr.io/containerhive/helper-images/dind-rootless:29.9 dockerd --host=tcp://0.0.0.0:2375
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e DOCKER_HOST=tcp://dind:2375 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -225,7 +225,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start Docker-in-Docker
-        run: docker run -d --name dind --privileged --network ch-net -e DOCKER_TLS_CERTDIR="" docker:dind
+        run: docker run -d --name dind --privileged --network ch-net -e DOCKER_TLS_CERTDIR="" ghcr.io/containerhive/helper-images/dind-rootless:29.9 dockerd --host=tcp://0.0.0.0:2375
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e DOCKER_HOST=tcp://dind:2375 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -268,7 +268,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start BuildKit daemon
-        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.34.0 --addr tcp://0.0.0.0:8372
+        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.34.1 --addr tcp://0.0.0.0:8372
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -306,7 +306,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start BuildKit daemon
-        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.34.0 --addr tcp://0.0.0.0:8372
+        run: docker run -d --name buildkitd --privileged --network ch-net moby/buildkit:v0.34.1 --addr tcp://0.0.0.0:8372
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e BUILDKIT_HOST=tcp://buildkitd:8372 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -370,7 +370,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start Docker-in-Docker
-        run: docker run -d --name dind --privileged --network ch-net -e DOCKER_TLS_CERTDIR="" docker:dind
+        run: docker run -d --name dind --privileged --network ch-net -e DOCKER_TLS_CERTDIR="" ghcr.io/containerhive/helper-images/dind-rootless:29.9 dockerd --host=tcp://0.0.0.0:2375
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e DOCKER_HOST=tcp://dind:2375 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
@@ -410,7 +410,7 @@ jobs:
       - name: Create Docker network
         run: docker network create ch-net
       - name: Start Docker-in-Docker
-        run: docker run -d --name dind --privileged --network ch-net -e DOCKER_TLS_CERTDIR="" docker:dind
+        run: docker run -d --name dind --privileged --network ch-net -e DOCKER_TLS_CERTDIR="" ghcr.io/containerhive/helper-images/dind-rootless:29.9 dockerd --host=tcp://0.0.0.0:2375
       - name: Login to registry
         run: echo "${{ secrets.CONTAINER_HIVE_REGISTRY_PASSWORD }}" | docker run --rm --entrypoint="" -u "$(id -u):$(id -g)" -e CI=1 -i -e HOME="$RUNNER_TEMP/ch" -v "$RUNNER_TEMP/ch:$RUNNER_TEMP/ch" -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" -w "$GITHUB_WORKSPACE" --network ch-net -e DOCKER_HOST=tcp://dind:2375 $CH_IMAGE ch login -u "${{ secrets.CONTAINER_HIVE_REGISTRY_USERNAME }}" --password-stdin "docker.io"
       - name: Login to GHCR
